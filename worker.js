@@ -1,11 +1,23 @@
 export default {
+  fetch() {
+    return new Response(null, {
+      status: 301,
+      headers: {
+        "Location": "https://workers.cloudflare.com/"
+      }
+    });
+  },
+
   async scheduled(event, env, ctx) {
     try {
-      const bingUrl = "https://www.bing.com/HPImageArchive.aspx?format=js&idx=0&n=1&mkt=zh-CN";
       const TELEGRAM_BOT_TOKEN = env.TELEGRAM_BOT_TOKEN;
       const TELEGRAM_CHAT_ID = env.TELEGRAM_CHAT_ID;
 
-      const response = await fetch(bingUrl);
+      const response = await fetch("https://www.bing.com/HPImageArchive.aspx?format=js&idx=0&n=1&mkt=zh-CN", {
+        headers: {
+          'Accept-Language': 'zh,zh-CN;q=0.9',
+        },
+      });
       if (!response.ok) throw new Error(`获取 Bing 壁纸失败: ${response.status} ${response.statusText}`);
 
       const { images } = await response.json();
